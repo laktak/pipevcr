@@ -5,6 +5,15 @@ Record and play back pipes. Similar to what `script` does with the terminal but 
 
 This can be used for debugging or testing where timing matters.
 
+## Installation
+
+```
+pip install --user pipevcr
+
+# or if you have pipx
+pipx install pipevcr
+```
+
 ## Usage
 
 ```
