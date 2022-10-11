@@ -9,7 +9,7 @@ import time
 
 
 class Pipetime:
-    def play(fd, filename, *, max_pause=-1):
+    def play(fd, filename, *, max_pause=-1, speed=1):
         with open(filename, "rb") as f:
             while True:
                 data = f.read(4)
@@ -18,10 +18,11 @@ class Pipetime:
                 l = struct.unpack("!i", data)[0]
                 data = f.read(l)
                 os.write(fd, data)
-                pause = struct.unpack("!i", f.read(4))[0]
+                pause_ms = struct.unpack("!i", f.read(4))[0]
+                pause_ms /= speed
                 if max_pause >= 0:
-                    pause = min(pause, max_pause)
-                time.sleep(pause / 1000)
+                    pause_ms = min(pause_ms, max_pause * 1000)
+                time.sleep(pause_ms / 1000)
 
     def record(fd, fdout, filename):
         with open(filename, "wb") as f:
@@ -58,7 +59,9 @@ def main(parser):
             return 1
         Pipetime.record(fd, sys.stdout.fileno(), args.file)
     else:
-        Pipetime.play(sys.stdout.fileno(), args.file, max_pause=args.max_pause)
+        Pipetime.play(
+            sys.stdout.fileno(), args.file, max_pause=args.max_pause, speed=args.speed
+        )
 
     return 0
 
@@ -70,12 +73,20 @@ if __name__ == "__main__":
     parser.add_argument("file", metavar="FILE", type=str, help="data file")
     parser.add_argument("-r", "--record", action="store_true", help="record pipe")
     parser.add_argument(
+        "-s",
+        "--speed",
+        action="store",
+        type=float,
+        default=1,
+        help="playback speed, <1 to slow down, >1 to speed up",
+    )
+    parser.add_argument(
         "-m",
         "--max-pause",
         action="store",
-        type=int,
+        type=float,
         default=-1,
-        help="max pause time between outputs in ms",
+        help="max pause time between outputs in seconds",
     )
 
     if len(sys.argv) == 1:
