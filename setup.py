@@ -6,7 +6,7 @@ with open(os.path.join(os.path.dirname(__file__), "README.md"), encoding="utf-8"
 
 setup(
     name="pipevcr",
-    version="0.1.0",
+    version="0.1.1",
     url="https://github.com/laktak/pipevcr",
     author="Christian Zangl",
     author_email="laktak@cdak.net",

@@ -67,7 +67,6 @@ def main(parser):
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(description=f"pipevcr - the linux pipe recorder")
 
     parser.add_argument("file", metavar="FILE", type=str, help="data file")
@@ -92,4 +91,8 @@ if __name__ == "__main__":
     if len(sys.argv) == 1:
         parser.print_help(sys.stderr)
     else:
-        sys.exit(main(parser))
+        try:
+            sys.exit(main(parser))
+        except KeyboardInterrupt:
+            print("aborted")
+            sys.exit(1)
