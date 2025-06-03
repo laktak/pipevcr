@@ -93,6 +93,9 @@ if __name__ == "__main__":
     else:
         try:
             sys.exit(main(parser))
+        except BrokenPipeError:
+            print("pipevcr: broken pipe error", file=sys.stderr)
+            sys.exit(1)
         except KeyboardInterrupt:
-            print("aborted")
+            print("pipevcr: aborted")
             sys.exit(1)
